@@ -215,3 +215,165 @@ MongoClient.connect(url, function(err, db) {
     db.close();
   });
 });
+
+
+<------------------------------------------------------------------------limit----------------find any five lie that---------------------------------------------------------------------->
+
+
+Node.js MongoDB Limit
+To limit the result in MongoDB, we use the limit() method.
+The limit() method takes one parameter, 
+a number defining how many documents to return.
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  dbo.collection("customers").find().limit(5).toArray(function(err, result) {
+    if (err) throw err;
+    console.log(result);
+    db.close();
+  });
+});
+
+
+
+
+<------------------------------------------------------------------------DELETE ONE AND MANY ------------------------------------------------------------------------------>
+
+
+
+Node.js MongoDB Delete
+
+Delete Document
+To delete a record, or document as it is called in MongoDB, 
+we use the deleteOne() method.
+Delete Many
+To delete more than one document, use the deleteMany() method.
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  var myquery = { address: 'Manu Bhavan' };
+  dbo.collection("customers").deleteOne(myquery, function(err, obj) {
+    if (err) throw err;
+    console.log("1 document deleted");
+    db.close();
+  });
+});
+
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  var myquery = { address: 'bhavan' };
+  dbo.collection("customers").deleteMany(myquery, function(err, obj) {
+    if (err) throw err;
+    console.log(obj.result.n + " document(s) deleted");
+    db.close();
+  });
+});
+
+
+<------------------------------------------------------------------------------------update one updatemany------------------------------->
+
+
+
+Node.js Mongodb Update
+Update Document
+You can update a record, or document as it is called in MongoDB, 
+by using the updateOne() method.
+
+The first parameter of the updateOne() method is a 
+query object defining which document to update.
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  var myquery = { address: "Manu Bhavan" };
+  var newvalues = { $set: {name: "Vishnu", address: "Vishnu Bhavan" } };
+  dbo.collection("customers").updateOne(myquery, newvalues, function(err, res) {
+    if (err) throw err;
+    console.log("1 document updated");
+    db.close();
+  });
+});
+
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  var myquery = { address: 'Manu Bhavan' };
+  var newvalues = {$set: {name: "Mahesh"} };
+  dbo.collection("customers").updateMany(myquery, newvalues, function(err, res) {
+    if (err) throw err;
+    console.log(res.result.nModified + " document(s) updated");
+    db.close();
+  });
+});
+
+
+
+<---------------------------------------------------------------------twodatabase/pages---------------MongoDB Join------------------------------------------------------------------------>
+
+Node.js MongoDB Join
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  dbo.collection('orders').aggregate([
+    { $lookup:
+       {
+         from: 'products',
+         localField: 'product_id',
+         foreignField: '_id',
+         as: 'orderdetails'
+       }
+     }
+    ]).toArray(function(err, res) {
+    if (err) throw err;
+    console.log(JSON.stringify(res));
+    db.close();
+  });
+});
+
+
+<---------------------------------------------------------------------drop/--/deletecollection--------------------------------------------------------------------------------------------->
+
+
+Node.js MongoDB Drop
+
+Drop Collection
+You can delete a table, or collection as it is called in MongoDB, 
+by using the drop() method.
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://127.0.0.1:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  dbo.collection("customers").drop(function(err, delOK) {
+    if (err) throw err;
+    if (delOK) console.log("Collection deleted");
+    db.close();
+  });
+});
+
